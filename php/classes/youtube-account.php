@@ -35,6 +35,32 @@ class Account {
 	private $userInfo;
 
 	/**
+	 * Constructor for this Account
+	 *
+	 * @param mixed $newAccountId ID of this account or null if its a new account.
+	 * @param string $newAccountName string containing actual name of youtube account.
+	 * @param string $newUserInfo string containing actual information about the person who has the account.
+	 * @param String $newSalt string containing 64 bytes with encrypted information about the password.
+	 * @param string $newHash string containing 128 bytes with encrypted information about the password.
+	 * @param string $newEmail string containing actual email ideas.
+	 */
+	public function __construct($newAccoutId,$newAccountName, $newUserInfo,$newSalt, $newHash, $newSalt, $newEmail = null) {
+		try {
+			$this->setAccountId($newAccountName);
+			$this->setAccountName($newAccountName);
+			$this->setUserInfo($newUserInfo);
+			$this->setSalt($newSalt);
+			$this->setHash($newHash);
+			$this->setEmail($newEmail);
+		} catch(InvalidArgumentException $invalidArguement) {
+			//rethrow the exception $invalidArguement
+			throw(new InvalidArgumentException($invalidArguement->getMessage(), 0, $invalidArguement));
+		} catch()
+	}
+
+
+
+	/**
 	 * accessor method accountId
 	 *
 	 * @return mixed value of accountId
@@ -195,6 +221,7 @@ class Account {
 		//store the hash
 		$this->hash = $newHash;
 	}
+
 
 	/**
 	 * Accessor method for email
