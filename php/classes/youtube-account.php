@@ -52,11 +52,11 @@ class Account {
 	public function __construct($newAccountId, $newAccountName, $newUserInfo, $newSalt, $newHash, $newEmail = null) {
 		try {
 			$this->setAccountId($newAccountId);
+			$this->setEmail($newEmail);
 			$this->setAccountName($newAccountName);
 			$this->setUserInfo($newUserInfo);
 			$this->setSalt($newSalt);
 			$this->setHash($newHash);
-			$this->setEmail($newEmail);
 		} catch(InvalidArgumentException $invalidArgument) {
 			// rethrow the exception to the caller
 			throw(new InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
@@ -102,7 +102,37 @@ class Account {
 
 		// convert and store the profile id
 		$this->accountId = intval($newAccountId);
+	}
+	/**
+	 * Accessor method for email
+	 *
+	 * @return string value of email
+	 */
 
+	public  function getEmail() {
+		return ($this->email);
+	}
+	/**
+	 * mutator method for email
+	 *
+	 * @param string $newEmail new value of user information
+	 * @throws InvalidArgumentException if $newEmail is not a string or insecure
+	 *@throws RangeException if $newHash is more than 128 characters
+	 */
+
+	public function setEmail ($newEmail){
+		// verify the email address is correct
+		$newEmail = trim($newEmail);
+		$newEmail = filter_var($newEmail,FILTER_SANITIZE_EMAIL);
+		if(empty($newEmail) === true) {
+			throw(new InvalidArgumentException("user information is insecure or empty"));
+		}
+		// veryify the email can fit into the database.
+		if(strlen($newEmail) > 128){
+			throw(new RangeException("Email is to long"));
+		}
+		//store the tweet content
+		$this->email = $newEmail;
 	}
 	/**
 	 * accessor method for account name
@@ -229,39 +259,4 @@ class Account {
 		//store the hash
 		$this->hash = $newHash;
 	}
-
-
-	/**
-	 * Accessor method for email
-	 *
-	 * @return string value of email
-	 */
-
-	public  function getEmail(){
-		return($this->email);
-	}
-
-	/**
-	 * mutator method for email
-	 *
-	 * @param string $newEmail new value of user information
-	 * @throws InvalidArgumentException if $newEmail is not a string or insecure
-	 *@throws RangeException if $newHash is more than 128 characters
-	 */
-
-	public function setEmail ($newEmail){
-		// verify the email address is correct
-		$newEmail = trim($newEmail);
-		$newEmail = filter_var($newEmail,FILTER_SANITIZE_EMAIL);
-		if(empty($newEmail) === true) {
-			throw(new InvalidArgumentException("user information is insecure or empty"));
-		}
-		// veryify the email can fit into the database.
-		if(strlen($newEmail) > 128){
-			throw(new RangeException("Email is to long"));
-		}
-		//store the tweet content
-		$this->email = $newEmail;
-	}
-
 }
