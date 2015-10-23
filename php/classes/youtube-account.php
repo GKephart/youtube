@@ -1,7 +1,12 @@
 <?php
 /**
- * Small cross section of a youtube user account
- * @author George Kephart <gkephart@cnm.edu
+ * This is a small cross section of youtube for the data design project.
+ *
+ * This class mutates and sanitizes user input that will go into the Mysql database.
+ * After the user input is sanitized and verified it uploads the user information into MySQL.
+ * This class also checks to see if a new youtube account needs to be created for the information given.
+ *
+ * @author George Kephart <gkephart@cnm.edu>
  **/
 class Account {
 	/**
@@ -40,13 +45,14 @@ class Account {
 	 * Constructor for this Account
 	 *
 	 * @param mixed $newAccountId ID of this account or null if its a new account.
+	 * @param string $newEmail string containing actual email ideas.
 	 * @param string $newAccountName string containing actual name of youtube account.
 	 * @param string $newUserInfo string containing actual information about the person who has the account.
-	 * @param String $newSalt string containing 64 bytes with encrypted information about the password.
+	 * @param string $newSalt string containing 64 bytes with encrypted information about the password.
 	 * @param string $newHash string containing 128 bytes with encrypted information about the password.
 	 * @param string $newEmail string containing actual email ideas.
 	 * @throws InvalidArgumentException if data types aren't valid
-	 * @throws RangeException if data Values are out of bounds (e.g strings incorrect length, negitive intergers)
+	 * @throws RangeException if data Values are out of bounds (e.g strings incorrect length, negative integers)
 	 * @throws Exception if some other exception is thrown
 	 */
 	public function __construct($newAccountId, $newAccountName, $newUserInfo, $newSalt, $newHash, $newEmail = null) {
@@ -117,7 +123,7 @@ class Account {
 	 *
 	 * @param string $newEmail new value of user information
 	 * @throws InvalidArgumentException if $newEmail is not a string or insecure
-	 *@throws RangeException if $newHash is more than 128 characters
+	 * @throws RangeException if $newHash is more than 128 characters
 	 */
 
 	public function setEmail ($newEmail){
@@ -127,7 +133,7 @@ class Account {
 		if(empty($newEmail) === true) {
 			throw(new InvalidArgumentException("user information is insecure or empty"));
 		}
-		// veryify the email can fit into the database.
+		// verify the email can fit into the database.
 		if(strlen($newEmail) > 128){
 			throw(new RangeException("Email is to long"));
 		}
@@ -176,7 +182,7 @@ class Account {
 	 * Mutator method for user information
 	 *
 	 * @param string $newUserInfo new value of user information
-	 * @throws InvalidArgumentException if $newUserInfo is not a string or inssecure
+	 * @throws InvalidArgumentException if $newUserInfo is not a string or insecure
 	 *@throws RangeException if $newUserInfo is > 100 characters
 	 */
 	public function setUserInfo ($newUserInfo){
@@ -187,7 +193,7 @@ class Account {
 		if(empty($newUserInfo) === true) {
 			throw(new InvalidArgumentException("user information is insecure or empty"));
 		}
-		// veryify the tweet content will fit into the database.
+		// verify the tweet content will fit into the database.
 		if(strlen($newUserInfo) > 140){
 			throw(new RangeException("user information is to long"));
 		}
@@ -219,7 +225,7 @@ class Account {
 		if(empty($newSalt) === true) {
 			throw(new InvalidArgumentException("user salt information is insecure or empty"));
 		}
-		// veryify salt is the correct length.
+		// verify salt is the correct length.
 		if(strlen($newSalt) !== 64){
 			throw(new RangeException("half of the password verification  is not the right length"));
 		}
@@ -242,7 +248,7 @@ class Account {
 	 *
 	 * @param string $newHash new value of user information
 	 * @throws InvalidArgumentException if $newHash is not a string or insecure
-	 *@throws RangeException if $newHash is not 128 characters
+	 * @throws RangeException if $newHash is not 128 characters
 	 */
 
 	public function setHash ($newHash){
@@ -252,11 +258,20 @@ class Account {
 		if(empty($newHash) === true) {
 			throw(new InvalidArgumentException("user hash information is insecure or empty"));
 		}
-		// veryify the hash will fit into the database.
+		// verify the hash will fit into the database.
 		if(strlen($newHash) !== 128 ){
 			throw(new RangeException("half of the password verification  is not the right length"));
 		}
 		//store the hash
 		$this->hash = $newHash;
 	}
+
+
+
+
+
+
+
+
+
 }
