@@ -43,23 +43,29 @@ class Account {
 	 * @param String $newSalt string containing 64 bytes with encrypted information about the password.
 	 * @param string $newHash string containing 128 bytes with encrypted information about the password.
 	 * @param string $newEmail string containing actual email ideas.
+	 * @throws InvalidArgumentException if data types aren't valid
+	 * @throws RangeException if data Values are out of bounds (e.g strings incorrect length, negitive intergers)
+	 * @throws Exception if someother exception is thrown
 	 */
-	public function __construct($newAccoutId,$newAccountName, $newUserInfo,$newSalt, $newHash, $newSalt, $newEmail = null) {
+	public function __construct($newAccountId, $newAccountName, $newUserInfo, $newSalt, $newHash, $newEmail = null) {
 		try {
-			$this->setAccountId($newAccountName);
+			$this->setAccountId($newAccountId);
 			$this->setAccountName($newAccountName);
 			$this->setUserInfo($newUserInfo);
 			$this->setSalt($newSalt);
 			$this->setHash($newHash);
 			$this->setEmail($newEmail);
-		} catch(InvalidArgumentException $invalidArguement) {
-			//rethrow the exception $invalidArguement
-			throw(new InvalidArgumentException($invalidArguement->getMessage(), 0, $invalidArguement));
-		} catch()
+		} catch(InvalidArgumentException $invalidArgument) {
+			// rethrow the exception to the caller
+			throw(new InvalidArgumentException($invalidArgument->getMessage(), 0, $invalidArgument));
+		} catch(RangeException $range) {
+			// rethrow the exception to the caller
+			throw(new RangeException($range->getMessage(), 0, $range));
+		} catch(Exception $exception) {
+			// rethrow generic exception
+			throw(new Exception($exception->getMessage(), 0, $exception));
+		}
 	}
-
-
-
 	/**
 	 * accessor method accountId
 	 *
