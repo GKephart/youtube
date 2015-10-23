@@ -10,29 +10,31 @@ class Account {
 	 */
 	private $accountId;
 	/**
-	 * This is th name of the profile tied to the account, in an VARCHAR with 32 characters
-	 * @var string $accountNAme
-	 **/
-	private $accountName;
-	/**
 	 * This is the email associated with the youtube account
 	 * @var string $email
 	 */
 	private $email;
-	/** this is a SHA-5-12 hash with 128 bytes
-	 * @var int $hash
-	 */
-	private $hash;
 	/**
-	 * this is a 64 byte salt used for password verification
-	 * @var int $salt
-	 */
-	private $salt;
+	 * This is th name of the profile tied to the account, in an VARCHAR with 32 characters
+	 * @var string $accountName
+	 **/
+	private $accountName;
 	/**
 	 * this is a basic description of the person who owns the account, this field is optional
 	 *@var string $userInfo
 	 */
 	private $userInfo;
+	/**
+	 * this is a 64 byte salt used for password verification
+	 * @var int $salt
+	 */
+	private $salt;
+	/** this is a SHA-5-12 hash with 128 bytes
+	 * @var int $hash
+	 */
+	private $hash;
+
+	//Explanation of why i broke protocol and am not laying out in alphabetical order.
 
 	/**
 	 * Constructor for this Account
@@ -45,7 +47,7 @@ class Account {
 	 * @param string $newEmail string containing actual email ideas.
 	 * @throws InvalidArgumentException if data types aren't valid
 	 * @throws RangeException if data Values are out of bounds (e.g strings incorrect length, negitive intergers)
-	 * @throws Exception if someother exception is thrown
+	 * @throws Exception if some other exception is thrown
 	 */
 	public function __construct($newAccountId, $newAccountName, $newUserInfo, $newSalt, $newHash, $newEmail = null) {
 		try {
