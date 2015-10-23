@@ -29,7 +29,7 @@ class Account {
 	 */
 	private $salt;
 	/**
-	 * this is a basic description of the person who owns the account
+	 * this is a basic description of the person who owns the account, this field is optional
 	 *@var string $userInfo
 	 */
 	private $userInfo;
