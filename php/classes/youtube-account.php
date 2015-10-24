@@ -282,24 +282,65 @@ class Account {
 	 * @throws PDOException when mySQl errors occur
 	 */
 
-	public function insert(PDO $pdo) {
+	public function INSERT(PDO $pdo) {
 		//enforce if the youTubeAccount is null
 		if($this->accountId !== null) {
 			throw(new PDOException ("not a new account"));
 		}
 		// create query template
-			$query
-				= "INSERT INTO youtubeAccount(email, accountName, userInfo, salt, hash) VALUES(:email, :accountname, :userInfo, :salt, :hash)";
-		 	$statement = $pdo->prepare($query);
+		$query = "INSERT INTO youtubeAccount (email, accountName, userInfo, salt, hash) VALUES(:email, :accountName, :userInfo, :salt, :hash)";
+		$statement = $pdo->prepare($query);
 
-		 	// bind the member variables to the place holders in the template)
-		 	$parameters = array("email" => $this->email, "accountName" => $this->userInfo, "salt" => $this->salt, "hash" => $this->hash);
-		 $statement->excecute($parameters);
+		// bind the member variables to the place holders in the template)
+		$parameters = array("email" => $this->email, "accountName" => $this->userInfo, "salt" => $this->salt, "hash" => $this->hash);
+		$statement->execute($parameters);
 
-		  // update the null accountId with with what mySQL just gave us
-		  $this->accountId = intval($pdo->LastInsertId());
+		// update the null accountId with with what mySQL just gave us
+		$this->accountId = intval($pdo->LastInsertId());
+	}
+
+	/**
+	 * deletes this youtubeAccount from SQL
+	 *
+	 * @param PDO $pdo connection object
+	 * @throws PDOException when mySQL related errors happen
+	 */
+
+	public function delete(PDO $pdo) {
+		// enforce the accountId is null(i.e dont delete a account that hasnt been inserted
+		if($this->accountId === null) {
+			throw(new PDOException("unable to delete an account that does not exist"));
+		}
+		//create query template for deletion
+		 $query	="DELETE FROM youtubeAccount WHERE accountId= :accountId";
+		$statement = $pdo->prepare($query);
+
+		//bind the member to a place holder in the template
+		$parameters =array("accountId => $this->accountId");
+		$statement->execute($parameters);
+	}
+
+	/**
+	 *  updates this profile in mySQL
+	 *
+	 *  @param PDO $pdo PDO connection object
+	 * @throws PDOException when mySQL related errors occur
+	 */
+
+	public function update(PDO $pdo){
+		//enforce the accountId is not null(i.e you cant update a account that doesn't exist
+		if($this->accountId === null){
+			throw(new PDOException("unable to update an account that doesn't exist"));
+		}
+		// create query template
+		$query ="UPDATE tweet SET email = :email, accountName = :accountName, userInfo = :userInfo, salt = :salt, hash = :hash";
+
+		// bind the member variables to the place holders in the template
+		$parameters = array("email" => $this->email, "accountName" => $this->accountName, "userInfo" => $this->userInfo, "salt" => $this->salt, "hash" => $this->hash, "accountId" => $this->accountId);
+		$statement->execute($parameters);
 	}
 }
+
 
 
 
