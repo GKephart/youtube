@@ -276,7 +276,7 @@ class Account {
 	}
 
 	/**
-	 * Inserts this you tube account into mySQL
+	 * Inserts this youtube account into mySQL
 	 *
 	 * @param PDO $pdo PDO connection object
 	 * @throws PDOException when mySQl errors occur
@@ -288,7 +288,7 @@ class Account {
 			throw(new PDOException ("not a new account"));
 		}
 		// create query template
-		$query = "INSERT INTO youtubeAccount (email, accountName, userInfo, salt, hash) VALUES(:email, :accountName, :userInfo, :salt, :hash)";
+		$query = "INSERT INTO youtubeAccount(email, accountName, userInfo, salt, hash) VALUES(:email, :accountName, :userInfo, :salt, :hash)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template)
@@ -307,16 +307,17 @@ class Account {
 	 */
 
 	public function delete(PDO $pdo) {
-		// enforce the accountId is null(i.e dont delete a account that hasnt been inserted
+
+		// enforce the accountId is null(i.e don't delete a account that hasn't been inserted
 		if($this->accountId === null) {
 			throw(new PDOException("unable to delete an account that does not exist"));
 		}
 		//create query template for deletion
-		 $query	="DELETE FROM youtubeAccount WHERE accountId= :accountId";
+		 $query	="DELETE FROM youtubeAccount WHERE accountId = :accountId";
 		$statement = $pdo->prepare($query);
 
 		//bind the member to a place holder in the template
-		$parameters =array("accountId => $this->accountId");
+		$parameters = array("accountId => $this->accountId");
 		$statement->execute($parameters);
 	}
 
@@ -333,7 +334,8 @@ class Account {
 			throw(new PDOException("unable to update an account that doesn't exist"));
 		}
 		// create query template
-		$query ="UPDATE tweet SET email = :email, accountName = :accountName, userInfo = :userInfo, salt = :salt, hash = :hash";
+		$query = "UPDATE tweet SET email = :email, accountName = :accountName, userInfo = :userInfo, salt = :salt, hash = :hash WHERE accountId = :accountId";
+		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
 		$parameters = array("email" => $this->email, "accountName" => $this->accountName, "userInfo" => $this->userInfo, "salt" => $this->salt, "hash" => $this->hash, "accountId" => $this->accountId);
