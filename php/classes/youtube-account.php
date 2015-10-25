@@ -341,7 +341,48 @@ class Account {
 		$parameters = array("email" => $this->email, "accountName" => $this->accountName, "userInfo" => $this->userInfo, "salt" => $this->salt, "hash" => $this->hash, "accountId" => $this->accountId);
 		$statement->execute($parameters);
 	}
+
+
+	/**
+	 * gets the youtube account by content
+	 *
+	 * @param PDO $pdo PDO connection object
+	 * @param string %accountName to search for
+	 * @return SPlFixedArray all
+	 *
+	 *
+	 */
+
+
+
+	$foo = $bar //place holder will come back to this object i dont know how to write this object since the thing i would wnat to search would be a 1 to 1 connection (account name to account)
+
+	/**
+	 * gets the youtube account by youtubeAccountId
+	 *
+	 * @param PDO $pdo PDO connection object
+	 * @param int $accountId account id to search for
+	 * @return mixed account found or null if ot found
+	 * @throws PDOException when mySQL errors occur
+	 */
+
+	public static function getYoutubeAccountByAccountId(PDO $pdo, $accountId){
+		//sanatize the accountId before searching
+		$accountId = filter_var($accountId, FILTER_VALIDATE_INT);
+		if($accountId === false) {
+			throw(new PDOException("accountId is not an interger"));
+		}
+		if($accountId <= 0) {
+			throw(new PDOException("account id is not positive"));
+		}
+
+
+	}
+
+
+
 }
+
 
 
 
