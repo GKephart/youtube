@@ -334,7 +334,7 @@ class Account {
 			throw(new PDOException("unable to update an account that doesn't exist"));
 		}
 		// create query template
-		$query = "UPDATE tweet SET email = :email, accountName = :accountName, userInfo = :userInfo, salt = :salt, hash = :hash WHERE accountId = :accountId";
+		$query = "UPDATE youtubeAccount SET email = :email, accountName = :accountName, userInfo = :userInfo, salt = :salt, hash = :hash WHERE accountId = :accountId";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -367,7 +367,7 @@ class Account {
 	 */
 
 	public static function getYoutubeAccountByAccountId(PDO $pdo, $accountId){
-		//sanatize the accountId before searching
+		//sanitize the accountId before searching
 		$accountId = filter_var($accountId, FILTER_VALIDATE_INT);
 		if($accountId === false) {
 			throw(new PDOException("accountId is not an interger"));
@@ -375,12 +375,58 @@ class Account {
 		if($accountId <= 0) {
 			throw(new PDOException("account id is not positive"));
 		}
+		// create a query template
+		$query = "SLECET AccountId, email, accountName, userInfo, salt, hash FROM youtubeAccount Where accountId = :accountId";
+		$statement = $pdo->prepare($query);
 
+		//bind the account id to the place holder in the template
+		$parameters = array("accountId" => $accountId);
+		$statement->execute($parameters);
 
+		// grabs the account from mySQL
+		try {
+			$youtubeAccount = null;
+			$statement->SetFetchMode(PDO::FETCH_ASSOC);
+			$row	=$statement->fetch();
+			if($row !== false){
+				$youtubeAccount = new Account($row["accountId"], $row["email"], $row["accountName"], $row["userInfo"], $row["salt"], $row["hash"]);
+			}
+		} catch(Exception $exception) {
+			//if the row couldn't be converted, rethrow it
+			throw(new PDOException($exception->getMessage(), 0 , $exception));
+		}
+		return($youtubeAccount);
 	}
 
+	/**
+	 *gets all youtube account
+	 *
+	 * @param PDO $pdo PDO connection object
+	 * @return SPLFixedArray
+	 * @throws PDOException
+	 **/
+	public static function getAllYoutubeAccounts(PDO $pdo) {
+		// create query template
+		$query =  "SELECT accountId, email, accountName, userInfo, salt, hash";
+		$statement = $pdo->prepare($query);
+		$statement->execute();
 
+		//build an array of youtube accounts
+		$youtubeAccounts = new SPLFixedArrays($statement->rowCount());
+		$statement->setFetchMode(PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try{
+				$youtubeAccount = new Account($row["accountId"], $row["email"], $row["userInfo"], $row["salt"], $row["hash"]);
+				$youtubeAccounts[$youtubeAccounts->key()]= $youtubeAccount;
+				$youtubeAccounts->next();
+			}catch (Exception $exception){
+				// if the row couldn't be converted rethrow it
+				throw new (new PDOException($exception->getMessage(), 0, $exception));
 
+			}
+		}
+		return($youtubeAccounts);
+	}
 }
 
 
